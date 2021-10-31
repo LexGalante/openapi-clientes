@@ -1,0 +1,296 @@
+openapi: 3.0.0
+
+info:
+  title: Cadastro de clientes
+  description: CRUD de cadastro de clientes
+  termsOfService: https://api-cadastrocliente.com/termos
+  version: 1.0.0
+  contact:
+    name: Alex Galante
+    url: https://cadastrocliente.com/contato
+    email: alex_gm_100@hotmail.com
+    
+servers:
+- url: https://api-cadastrocliente.com/dev
+- url: https://api-cadastrocliente.com/hml
+- url: https://api-cadastrocliente.com/prd
+  
+paths:
+  /clientes:
+    get:
+      description: Lista de clientes
+      responses:
+        '200':
+          description: Lista de clientes
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/cliente'
+        '404':
+          description: Sem cliente
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/404'
+    post:
+      description: Lista de clientes
+      requestBody:
+        description: Dados de cliente
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/cliente'
+            examples:
+              cliente:
+                $ref: '#/components/examples/cliente'
+      responses:
+        '201':
+          description: Lista de clientes
+          content:
+            application/json:
+              schema: 
+                $ref: '#/components/schemas/cliente'
+        '400':
+          description: Requisição inválida
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/400'
+        '409':
+          description: Conflito
+          content:
+            application/json:
+              schema:
+                type: object
+                items:
+                  $ref: '#/components/schemas/409'
+        '422':
+          description: Entidade inválida
+          content:
+            application/json:
+              schema:
+                type: object
+                items:
+                  $ref: '#/components/schemas/422'
+  '/clientes/{id}':
+    get:
+      description: Consulta um cliente
+      parameters:
+        - $ref: '#/components/parameters/id'
+      responses:
+        '200':
+          description: Consulta um cliente
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/cliente'
+        '404':
+          description: Sem cliente
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/404'
+    put:
+      description: Altera um cliente
+      parameters:
+        - $ref: '#/components/parameters/id'
+      requestBody:
+        description: Dados de cliente
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/cliente'
+            examples:
+              cliente:
+                $ref: '#/components/examples/cliente'
+      responses:
+        '202':
+          description: Alteração realizada com sucesso
+          content:
+            application/json:
+              schema: 
+                $ref: '#/components/schemas/cliente'
+        '400':
+          description: Requisição inválida
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/400'
+        '409':
+          description: Conflito
+          content:
+            application/json:
+              schema:
+                type: object
+                items:
+                  $ref: '#/components/schemas/409'
+        '422':
+          description: Entidade inválida
+          content:
+            application/json:
+              schema:
+                type: object
+                items:
+                  $ref: '#/components/schemas/422'
+    patch:
+      description: Altera um cliente parcialmente
+      parameters:
+        - $ref: '#/components/parameters/id'
+      requestBody:
+        description: Dados de cliente
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/cliente'
+            examples:
+              cliente:
+                $ref: '#/components/examples/cliente'
+      responses:
+        '202':
+          description: Alteração parcial realizada com sucesso
+          content:
+            application/json:
+              schema: 
+                $ref: '#/components/schemas/202'
+        '400':
+          description: Requisição inválida
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/400'
+        '409':
+          description: Conflito
+          content:
+            application/json:
+              schema:
+                type: object
+                items:
+                  $ref: '#/components/schemas/409'
+        '422':
+          description: Entidade inválida
+          content:
+            application/json:
+              schema:
+                type: object
+                items:
+                  $ref: '#/components/schemas/422'
+    delete:
+      description: Remove um cliente
+      parameters:
+        - $ref: '#/components/parameters/id'
+      responses:
+        '202':
+          description: Sucesso ao remover cliente
+          content:
+            application/json:
+              schema: 
+                $ref: '#/components/schemas/202'
+        '404':
+          description: Cliente não encontrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/404'
+    
+components:
+  examples:
+    cliente:
+      summary: Exemplo de cliente
+      value:
+        nome: Alex
+        sobrenome: Galante
+        email: alex@galante.com
+        aitvo: true
+  schemas:
+    cliente:
+      type: object
+      properties:
+        nome:
+          type: string
+        sobrenome:
+          type: string
+        email:
+          type: string
+          format: email
+        idade:
+          type: integer
+          minimum: 0
+          maximum: 150
+        ativo:
+          type: boolean
+          default: true
+      required:
+        - nome
+        - email
+    202:
+      type: string
+    204:
+      type: string  
+    400:
+      type: object
+      properties:
+        codigo:
+          type: string
+        mensagem:
+          type: string
+      required:
+        - codigo
+        - mensagem
+    404:
+      type: string
+    409:
+      type: object
+      properties:
+        codigo:
+          type: string
+        mensagem:
+          type: string
+      required:
+        - codigo
+        - mensagem
+    422:
+      type: object
+      properties:
+        codigo:
+          type: string
+        mensagem:
+          type: string
+      required:
+        - codigo
+        - mensagem
+  parameters:
+    id:
+      name: id
+      in: path
+      description: código único
+      required: true
+      schema:
+        type: integer
+  securitySchemes:
+    authorizathion:
+      type: oauth2
+      flows:
+        implicit:
+          authorizationUrl: https://api-cadastrocliente.com/token
+          scopes:
+            clientes:manager: Permissão de gerenciar cliente
+        clientCredentials:
+          tokenUrl: https://api-cadastrocliente.com/token
+          refreshUrl: https://api-cadastrocliente.com/token
+          scopes:
+            clientes:manager: Permissão de gerenciar cliente
+
+security:
+  - authorizathion: []
+      
